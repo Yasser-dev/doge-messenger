@@ -1,3 +1,3 @@
 # doge-messenger
 
-![dog emessanger logo](images/logo.png)
+![doge messanger logo](images/logo.png)
