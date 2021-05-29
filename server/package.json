@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Yasser-dev/doge-messenger#readme",
   "dependencies": {
     "apollo-server": "^2.24.0",
+    "bcryptjs": "^2.4.3",
     "graphql": "^15.5.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.2"
