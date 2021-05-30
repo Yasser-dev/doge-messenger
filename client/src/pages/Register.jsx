@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { Col, Form, Button, Card, Row } from "react-bootstrap";
+import { Col, Form, Button, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const REGISTER_USER = gql`
   mutation register(
@@ -120,6 +121,13 @@ export default function Register(props) {
             <Button variant="dark" type="submit" disabled={loading}>
               {loading ? "Loading..." : "Register"}
             </Button>
+            <br />
+            <small>
+              Already have an account?{" "}
+              <Link className="text-dark" to="/login">
+                Login!
+              </Link>{" "}
+            </small>
           </div>
         </Form>
       </Col>

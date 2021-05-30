@@ -39,19 +39,19 @@ module.exports = {
         if (password.trim() === "")
           errors.password = "Password cannot be empty";
         if (Object.keys(errors).length > 0) {
-          throw new UserInputError("Bad Input", errors);
+          throw new UserInputError("Bad Input", { errors });
         }
         const user = await User.findOne({ where: { username } });
 
         if (!user) {
           errors.username = "User not found";
-          throw new UserInputError("User not found", errors);
+          throw new UserInputError("User not found", { errors });
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
           errors.password = "Incorrect Password";
-          throw new AuthenticationError("Incorrect Password", errors);
+          throw new UserInputError("Incorrect Password", { errors });
         }
 
         // JWT
