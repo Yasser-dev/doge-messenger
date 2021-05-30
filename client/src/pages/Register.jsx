@@ -33,13 +33,8 @@ export default function Register(props) {
   const [errors, setErrors] = useState({});
 
   const [registerUser, { loading }] = useMutation(REGISTER_USER, {
-    update(_, res) {
-      console.log("RES", res);
-    },
-    onError(err) {
-      console.log("ERR", err.graphQLErrors[0].extensions.errors);
-      setErrors(err.graphQLErrors[0].extensions.errors);
-    },
+    update: (_, __) => props.history.push("/login"),
+    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
 
   const submitRegisterForm = (e) => {
