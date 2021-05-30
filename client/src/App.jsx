@@ -8,7 +8,7 @@ import Register from "./pages/Register";
 function App() {
   return (
     <ApolloProvider>
-      <Container className="pt-5 d-flex align-items-center justify-content-center">
+      <Container className="pt-5">
         <Register />
       </Container>
     </ApolloProvider>
