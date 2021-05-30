@@ -2,8 +2,8 @@ const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-const { User, Message } = require("../models");
-const { JWT_SECRET } = require("../config/env.json");
+const { User } = require("../../models");
+const { JWT_SECRET } = require("../../config/env.json");
 module.exports = {
   Query: {
     getUsers: async (_, __, { user }) => {
@@ -104,29 +104,6 @@ module.exports = {
           err.errors.forEach((e) => (errors[e.path] = e.message));
         }
         throw new UserInputError("Bad input", { errors });
-      }
-    },
-    sendMessage: async (parent, { to, content }, { user }) => {
-      try {
-        if (!user) throw new AuthenticationError("Unauthenticated");
-        const receiver = await User.findOne({ where: { username: to } });
-        if (content.trim() === "")
-          throw new UserInputError("Message can't be empty");
-        if (!receiver) {
-          throw new UserInputError("User not found");
-        } else if (receiver.username === user.username) {
-          throw new UserInputError("Can't message yourself");
-        }
-
-        const message = await Message.create({
-          from: user.username,
-          to,
-          content,
-        });
-        return message;
-      } catch (error) {
-        console.log(error);
-        throw error;
       }
     },
   },
