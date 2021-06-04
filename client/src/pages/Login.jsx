@@ -50,7 +50,7 @@ export default function Login(props) {
             <Form.Control
               type="text"
               value={variables.username}
-              className={errors.username && "is-invalid"}
+              className={errors ? (errors.username ? "is-invalid" : "") : ""}
               onChange={(e) =>
                 setVariables({ ...variables, username: e.target.value })
               }
