@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import { gql, useLazyQuery } from "@apollo/client";
-import { Col, Form, Button, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { useAuthDispatch } from "../context/auth";
@@ -16,22 +16,21 @@ const LOGIN_USER = gql`
   }
 `;
 
-export default function Login(props) {
+export default function Register(props) {
   const [variables, setVariables] = useState({
     username: "",
     password: "",
   });
-
   const [errors, setErrors] = useState({});
 
   const dispatch = useAuthDispatch();
 
   const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
+    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
     onCompleted(data) {
       dispatch({ type: "LOGIN", payload: data.login });
       props.history.push("/");
     },
-    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
   });
 
   const submitLoginForm = (e) => {
@@ -41,29 +40,27 @@ export default function Login(props) {
   };
 
   return (
-    <Row className="bg-white py-5 justify-content-center rounded">
+    <Row className="bg-white py-5 justify-content-center">
       <Col sm={8} md={6} lg={4}>
         <h1 className="text-center">Login</h1>
         <Form onSubmit={submitLoginForm}>
           <Form.Group>
-            <Form.Label>Username</Form.Label>
+            <Form.Label className={errors.username && "text-danger"}>
+              {errors.username ?? "Username"}
+            </Form.Label>
             <Form.Control
               type="text"
               value={variables.username}
-              className={errors ? (errors.username ? "is-invalid" : "") : ""}
+              className={errors.username && "is-invalid"}
               onChange={(e) =>
                 setVariables({ ...variables, username: e.target.value })
               }
             />
-            {errors.username && (
-              <p style={{ fontSize: ".7rem" }} className="text-danger">
-                {errors.username}
-              </p>
-            )}
           </Form.Group>
-
           <Form.Group>
-            <Form.Label>Password</Form.Label>
+            <Form.Label className={errors.password && "text-danger"}>
+              {errors.password ?? "Password"}
+            </Form.Label>
             <Form.Control
               type="password"
               value={variables.password}
@@ -72,23 +69,14 @@ export default function Login(props) {
                 setVariables({ ...variables, password: e.target.value })
               }
             />
-            {errors.password && (
-              <p style={{ fontSize: ".7rem" }} className="text-danger">
-                {errors.password}
-              </p>
-            )}
           </Form.Group>
-
-          <div className="text-center mt-3">
-            <Button variant="dark" type="submit" disabled={loading}>
-              {loading ? "Loading..." : "Login"}
+          <div className="text-center">
+            <Button variant="success" type="submit" disabled={loading}>
+              {loading ? "loading.." : "Login"}
             </Button>
             <br />
             <small>
-              Don't have an account?{" "}
-              <Link className="text-dark" to="/register">
-                Register!
-              </Link>
+              Don't have an account? <Link to="/register">Register</Link>
             </small>
           </div>
         </Form>
