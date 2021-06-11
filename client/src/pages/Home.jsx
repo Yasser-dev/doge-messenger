@@ -1,8 +1,21 @@
 import React from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
+
 import { useAuthDispatch } from "../context/auth";
-const Home = ({ history }) => {
+
+const GET_USERS = gql`
+  query getUsers {
+    getUsers {
+      username
+      email
+      createdAt
+    }
+  }
+`;
+
+export default function Home({ history }) {
   const dispatch = useAuthDispatch();
 
   const logout = () => {
@@ -10,25 +23,47 @@ const Home = ({ history }) => {
     history.push("/login");
   };
 
-  return (
-    <Row align="center" className="bg-white">
-      <Col>
-        <Link to="/login">
-          <Button variant="link-dark">Login</Button>
-        </Link>
-      </Col>
-      <Col>
-        <Link to="/register">
-          <Button variant="link-dark">Register</Button>
-        </Link>
-      </Col>
-      <Col>
-        <Button variant="link-dark" onClick={logout}>
-          Logout
-        </Button>
-      </Col>
-    </Row>
-  );
-};
+  const { loading, data, error } = useQuery(GET_USERS);
 
-export default Home;
+  if (error) {
+    console.log(error);
+  }
+
+  if (data) {
+    console.log(data);
+  }
+
+  let usersMarkup;
+  if (!data || loading) {
+    usersMarkup = <p>Loading..</p>;
+  } else if (data.getUsers.length === 0) {
+    usersMarkup = <p>No users have joined yet</p>;
+  } else if (data.getUsers.length > 0) {
+    usersMarkup = data.getUsers.map((user) => (
+      <div key={user.username}>
+        <p>{user.username}</p>
+      </div>
+    ));
+  }
+  return (
+    <Card>
+      <Row align="center">
+        <Col>
+          <Link to="/login">
+            <Button variant="link-dark">Login</Button>
+          </Link>
+        </Col>
+        <Col>
+          <Link to="/register">
+            <Button variant="link-dark">Register</Button>
+          </Link>
+        </Col>
+        <Col>
+          <Button variant="link-dark" onClick={logout}>
+            Logout
+          </Button>
+        </Col>
+      </Row>
+    </Card>
+  );
+}

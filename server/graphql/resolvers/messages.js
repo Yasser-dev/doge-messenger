@@ -1,17 +1,21 @@
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const { Op } = require("sequelize");
-const { User, Message } = require("../../models");
+
+const { Message, User } = require("../../models");
 
 module.exports = {
   Query: {
     getMessages: async (parent, { from }, { user }) => {
       try {
         if (!user) throw new AuthenticationError("Unauthenticated");
-        const chatUser = await User.findOne({ where: { username: from } });
-        if (!chatUser) {
-          throw new UserInputError("User not found");
-        }
-        const usernames = [user.username, chatUser.username];
+
+        const otherUser = await User.findOne({
+          where: { username: from },
+        });
+        if (!otherUser) throw new UserInputError("User not found");
+
+        const usernames = [user.username, otherUser.username];
+
         const messages = await Message.findAll({
           where: {
             from: { [Op.in]: usernames },
@@ -21,9 +25,9 @@ module.exports = {
         });
 
         return messages;
-      } catch (error) {
-        console.log(error);
-        throw error;
+      } catch (err) {
+        console.log(err);
+        throw err;
       }
     },
   },
@@ -31,13 +35,17 @@ module.exports = {
     sendMessage: async (parent, { to, content }, { user }) => {
       try {
         if (!user) throw new AuthenticationError("Unauthenticated");
-        const receiver = await User.findOne({ where: { username: to } });
-        if (content.trim() === "")
-          throw new UserInputError("Message can't be empty");
-        if (!receiver) {
+
+        const recipient = await User.findOne({ where: { username: to } });
+
+        if (!recipient) {
           throw new UserInputError("User not found");
-        } else if (receiver.username === user.username) {
-          throw new UserInputError("Can't message yourself");
+        } else if (recipient.username === user.username) {
+          throw new UserInputError("You cant message yourself");
+        }
+
+        if (content.trim() === "") {
+          throw new UserInputError("Message is empty");
         }
 
         const message = await Message.create({
@@ -45,10 +53,11 @@ module.exports = {
           to,
           content,
         });
+
         return message;
-      } catch (error) {
-        console.log(error);
-        throw error;
+      } catch (err) {
+        console.log(err);
+        throw err;
       }
     },
   },

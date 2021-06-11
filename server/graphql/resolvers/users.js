@@ -2,13 +2,16 @@ const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
+
 const { User } = require("../../models");
 const { JWT_SECRET } = require("../../config/env.json");
+
 module.exports = {
   Query: {
     getUsers: async (_, __, { user }) => {
       try {
         if (!user) throw new AuthenticationError("Unauthenticated");
+
         const users = await User.findAll({
           where: { username: { [Op.ne]: user.username } },
         });
@@ -19,44 +22,47 @@ module.exports = {
         throw err;
       }
     },
-
     login: async (_, args) => {
       const { username, password } = args;
       let errors = {};
+
       try {
         if (username.trim() === "")
           errors.username = "Username cannot be empty";
-        if (password.trim() === "")
-          errors.password = "Password cannot be empty";
+        if (password === "") errors.password = "Password cannot be empty";
+
         if (Object.keys(errors).length > 0) {
-          throw new UserInputError("Bad Input", { errors });
+          throw new UserInputError("Bad input", { errors });
         }
-        const user = await User.findOne({ where: { username } });
+
+        const user = await User.findOne({
+          where: { username },
+        });
 
         if (!user) {
           errors.username = "User not found";
           throw new UserInputError("User not found", { errors });
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (!isPasswordCorrect) {
-          errors.password = "Incorrect Password";
-          throw new UserInputError("Incorrect Password", { errors });
+        const correctPassword = await bcrypt.compare(password, user.password);
+
+        if (!correctPassword) {
+          errors.password = "Password is incorrect";
+          throw new UserInputError("Password is incorrect", { errors });
         }
 
-        // JWT
         const token = jwt.sign({ username }, JWT_SECRET, {
-          expiresIn: "3h",
+          expiresIn: 60 * 60,
         });
-        // user.token = token;
+
         return {
           ...user.toJSON(),
-          token,
           createdAt: user.createdAt.toISOString(),
+          token,
         };
-      } catch (error) {
-        console.log(error);
-        throw error;
+      } catch (err) {
+        console.log(err);
+        throw err;
       }
     },
   },
@@ -66,14 +72,14 @@ module.exports = {
       let errors = {};
 
       try {
-        // Validate input
-        if (email.trim() === "") errors.email = "Email can not be empty";
+        // Validate input data
+        if (email.trim() === "") errors.email = "Email cannot be empty";
         if (username.trim() === "")
-          errors.username = "Username can not be empty";
+          errors.username = "Username cannot be empty";
         if (password.trim() === "")
-          errors.password = "Password can not be empty";
+          errors.password = "Password cannot be empty";
         if (confirmPassword.trim() === "")
-          errors.confirmPassword = "Confirm password can not be empty";
+          errors.confirmPassword = "Confirm Password cannot be empty";
 
         if (password !== confirmPassword)
           errors.confirmPassword = "Passwords must match";
