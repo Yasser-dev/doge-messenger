@@ -23,7 +23,7 @@ const REGISTER_USER = gql`
   }
 `;
 
-export default function Register(props) {
+const Register = (props) => {
   const [variables, setVariables] = useState({
     email: "",
     username: "",
@@ -133,4 +133,6 @@ export default function Register(props) {
       </Col>
     </Row>
   );
-}
+};
+
+export default Register;

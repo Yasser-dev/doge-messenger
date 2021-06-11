@@ -15,7 +15,7 @@ const GET_USERS = gql`
   }
 `;
 
-export default function Home({ history }) {
+const Home = ({ history }) => {
   const dispatch = useAuthDispatch();
 
   const logout = () => {
@@ -72,4 +72,5 @@ export default function Home({ history }) {
       </Row>
     </Card>
   );
-}
+};
+export default Home;
