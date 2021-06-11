@@ -64,6 +64,12 @@ export default function Home({ history }) {
           </Button>
         </Col>
       </Row>
+      <Row className="p-5 ">
+        <Col xs={4}>{usersMarkup}</Col>
+        <Col xs={8}>
+          <p>Messages</p>
+        </Col>
+      </Row>
     </Card>
   );
 }

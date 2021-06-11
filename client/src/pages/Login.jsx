@@ -70,13 +70,16 @@ export default function Register(props) {
               }
             />
           </Form.Group>
-          <div className="text-center">
-            <Button variant="success" type="submit" disabled={loading}>
+          <div className="text-center mt-3">
+            <Button variant="dark" type="submit" disabled={loading}>
               {loading ? "loading.." : "Login"}
             </Button>
             <br />
             <small>
-              Don't have an account? <Link to="/register">Register</Link>
+              Don't have an account?{" "}
+              <Link className="link-dark" to="/register">
+                Register
+              </Link>
             </small>
           </div>
         </Form>

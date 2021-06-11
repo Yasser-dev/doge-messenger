@@ -124,7 +124,7 @@ export default function Register(props) {
             <br />
             <small>
               Already have an account?{" "}
-              <Link className="text-dark" to="/login">
+              <Link className="link-dark" to="/login">
                 Login!
               </Link>{" "}
             </small>
