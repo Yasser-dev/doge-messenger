@@ -4,7 +4,7 @@ import ErrorImg from "../assets/error.png";
 const Error404 = () => {
   return (
     <Col align="center">
-      <img src={ErrorImg} alt="error image" style={{ width: "20em" }} />
+      <img src={ErrorImg} alt="error" style={{ width: "20em" }} />
     </Col>
   );
 };

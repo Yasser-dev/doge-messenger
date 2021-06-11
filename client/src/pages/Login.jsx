@@ -40,14 +40,12 @@ const Login = (props) => {
   };
 
   return (
-    <Row className="bg-white py-5 justify-content-center">
+    <Row className="bg-white py-5 justify-content-center rounded">
       <Col sm={8} md={6} lg={4}>
         <h1 className="text-center">Login</h1>
         <Form onSubmit={submitLoginForm}>
           <Form.Group>
-            <Form.Label className={errors.username && "text-danger"}>
-              {errors.username ?? "Username"}
-            </Form.Label>
+            <Form.Label>Username</Form.Label>
             <Form.Control
               type="text"
               value={variables.username}
@@ -56,11 +54,15 @@ const Login = (props) => {
                 setVariables({ ...variables, username: e.target.value })
               }
             />
+            {errors.username && (
+              <p style={{ fontSize: ".7rem" }} className="text-danger">
+                {errors.username}
+              </p>
+            )}
           </Form.Group>
+
           <Form.Group>
-            <Form.Label className={errors.password && "text-danger"}>
-              {errors.password ?? "Password"}
-            </Form.Label>
+            <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               value={variables.password}
@@ -69,16 +71,22 @@ const Login = (props) => {
                 setVariables({ ...variables, password: e.target.value })
               }
             />
+            {errors.password && (
+              <p style={{ fontSize: ".7rem" }} className="text-danger">
+                {errors.password}
+              </p>
+            )}
           </Form.Group>
+
           <div className="text-center mt-3">
             <Button variant="dark" type="submit" disabled={loading}>
-              {loading ? "loading.." : "Login"}
+              {loading ? "Loading..." : "Login"}
             </Button>
             <br />
             <small>
               Don't have an account?{" "}
               <Link className="link-dark" to="/register">
-                Register
+                Register!
               </Link>
             </small>
           </div>
