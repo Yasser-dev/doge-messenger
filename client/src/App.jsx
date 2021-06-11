@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ApolloProvider from "./ApolloProvider";
 
 import "./App.scss";
@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 
 import { AuthProvider } from "./context/auth";
 import DynamicRoute from "./util/DynamicRoute";
+import Error404 from "./pages/Error404";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <DynamicRoute exact path="/" component={Home} authenticated />
               <DynamicRoute path="/register" component={Register} guest />
               <DynamicRoute path="/login" component={Login} guest />
+              <Route component={Error404} />
             </Switch>
           </Container>
         </BrowserRouter>
