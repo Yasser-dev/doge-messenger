@@ -45,7 +45,7 @@ const Register = (props) => {
   };
 
   return (
-    <Row className="bg-white py-5 justify-content-center rounded">
+    <Row className="bg-white py-5 justify-content-center rounded mb-5">
       <Col sm={8} md={6} lg={4}>
         <h1 className="text-center">Register</h1>
         <Form onSubmit={submitRegisterForm}>

@@ -1,9 +1,7 @@
 import React from "react";
-import { Button, Col, Row, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { Col, Row, Card } from "react-bootstrap";
 
-import { useAuthDispatch } from "../context/auth";
+import { gql, useQuery } from "@apollo/client";
 
 const GET_USERS = gql`
   query getUsers {
@@ -15,14 +13,7 @@ const GET_USERS = gql`
   }
 `;
 
-const Home = ({ history }) => {
-  const dispatch = useAuthDispatch();
-
-  const logout = () => {
-    dispatch({ type: "LOGOUT" });
-    history.push("/login");
-  };
-
+const Home = () => {
   const { loading, data, error } = useQuery(GET_USERS);
 
   if (error) {
@@ -47,23 +38,6 @@ const Home = ({ history }) => {
   }
   return (
     <Card>
-      <Row align="center">
-        <Col>
-          <Link to="/login">
-            <Button variant="link-dark">Login</Button>
-          </Link>
-        </Col>
-        <Col>
-          <Link to="/register">
-            <Button variant="link-dark">Register</Button>
-          </Link>
-        </Col>
-        <Col>
-          <Button variant="link-dark" onClick={logout}>
-            Logout
-          </Button>
-        </Col>
-      </Row>
       <Row className="p-5 ">
         <Col xs={4}>{usersMarkup}</Col>
         <Col xs={8}>

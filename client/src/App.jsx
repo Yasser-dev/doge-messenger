@@ -12,12 +12,14 @@ import Login from "./pages/Login";
 import { AuthProvider } from "./context/auth";
 import DynamicRoute from "./util/DynamicRoute";
 import Error404 from "./pages/Error404";
+import Header from "./components/Header";
 
 function App() {
   return (
     <ApolloProvider>
       <AuthProvider>
         <BrowserRouter>
+          <Header />
           <Container className="pt-5">
             <Switch>
               <DynamicRoute exact path="/" component={Home} authenticated />
